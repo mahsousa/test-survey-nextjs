@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import QuestionContainer from "./QuestionContainer";
-import { getError, getSuccess, getSurvey, postSurvey, SurveyRequest, SurveyResponse } from './../api/Survey';
-import ButtonsSend from "./ButtonsSend";
+import { getError, getSuccess, getSurvey, postSurvey, SurveyRequest, SurveyResponse } from '../api/Survey';
 import { Question, validate } from "@/types/Question";
 import MessageModal from "./MessageModal";
+import ButtonsSend from "./ButtonsSend";
 
 export default function Form() {
   const [surveyData, setSurveyData] = useState<SurveyResponse | null>(null);
@@ -34,18 +34,24 @@ export default function Form() {
   const handleSendFakePost = () => {
     if(!validateSurvey()) return;
 
-    var request : SurveyRequest = {
-      questions: surveyData!.itens! as Question[]
-    };
-    postSurvey(request)
-    .then(data => {
-      if(data.error) {
-        openModal('error', data.error);
-      } else {
-        openModal('success', `Suas respostas foram enviadas com sucesso!`);
-      }
-    })
-    .catch(error => console.error(error));
+    try{
+      var request : SurveyRequest = {
+        questions: surveyData!.itens! as Question[]
+      };
+      postSurvey(request)
+      .then(data => {
+        if(data.error) {
+          openModal('error', data.error);
+        } else {
+          openModal('success', `Suas respostas foram enviadas com sucesso!`);
+        }
+      })
+      .catch(error => console.error(error));
+    }
+    catch(error: unknown){
+      openModal('error', error as string);
+    }
+    
   }
 
   const validateSurvey = () => {

@@ -25,15 +25,25 @@ export async function getSurvey(): Promise<SurveyResponse> {
 }
 
 export async function postSurvey(survey : SurveyRequest): Promise<SurveyResponse> {
-    const response = await fetch('https://fdlmx-backgrounds.sfo3.digitaloceanspaces.com/front-test/survey.json', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(survey),
-    });
-    const data: SurveyResponse = await response.json();
-    return data;
+    try{
+        const response = await fetch('https://fdlmx-backgrounds.sfo3.digitaloceanspaces.com/front-test/survey.json', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(survey),
+        });
+        const data: SurveyResponse = await response.json();
+        return data;
+
+    }
+    catch(error: unknown){
+        console.error(error);
+        return {
+            error: "Ops... Não conseguimos enviar o seu formulário",
+            warning: ""
+        };
+    }
 }
 
 export async function getError(): Promise<SurveyResponse> {
